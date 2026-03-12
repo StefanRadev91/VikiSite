@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getProductById } from "@/data/products";
 import { verifyDownloadToken } from "@/lib/download-token";
-import { stripe } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
 import fs from "fs";
 import path from "path";
 
@@ -31,7 +31,7 @@ export async function GET(
 
   if (!authorized && sessionId) {
     try {
-      const session = await stripe.checkout.sessions.retrieve(sessionId);
+      const session = await getStripe().checkout.sessions.retrieve(sessionId);
       if (
         session.payment_status === "paid" &&
         session.metadata?.productId === productId

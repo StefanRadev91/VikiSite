@@ -1,6 +1,12 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let _resend: Resend | null = null;
+function getResend(): Resend {
+  if (!_resend) {
+    _resend = new Resend(process.env.RESEND_API_KEY);
+  }
+  return _resend;
+}
 
 interface SendDownloadEmailParams {
   to: string;
@@ -13,7 +19,7 @@ export async function sendDownloadEmail({
   productTitle,
   downloadUrl,
 }: SendDownloadEmailParams) {
-  const { error } = await resend.emails.send({
+  const { error } = await getResend().emails.send({
     from: "HR Interview Guide <noreply@yourdomain.com>", // Change to your verified domain
     to,
     subject: `Твоят файл: ${productTitle}`,

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { stripe } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
 import { getProductById } from "@/data/products";
 import { generateDownloadToken } from "@/lib/download-token";
 import { sendDownloadEmail } from "@/lib/email";
@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Search Stripe for completed checkout sessions with this email
-    const sessions = await stripe.checkout.sessions.list({
+    const sessions = await getStripe().checkout.sessions.list({
       limit: 100,
       status: "complete",
     });
